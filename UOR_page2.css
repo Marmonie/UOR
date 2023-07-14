@@ -1,0 +1,39 @@
+.citation {
+	text-align: right;
+	margin:0;
+	padding:10pt;
+	font: italic normal lighter 1.2em Verdana, Arial, cursive;
+	color: #B9B9B9;
+	letter-spacing: +2px;
+}
+
+h1 {
+  width: 500pt;
+  border: 5pt sodid blue;
+  padding: 50pt;
+  margin: 10pt;
+  font: small-caps Georgia, Verdana, sans-serif;
+}
+
+body {
+    fontt-family: 'source-code-pro', Arial, sans-serif;
+}
+
+img {
+	padding: 0 10pt;
+}
+
+.r {
+	float: right;
+}
+
+.l {
+	float: left;
+}
+
+.clearfix { /* Contient une image dans la section à laquelle elle appartient 
+(pas de dépacement) */
+	content: "";
+	clear: both;
+	display: table;
+}
