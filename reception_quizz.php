@@ -90,7 +90,7 @@
   			} 
 
   			/* Vérification que nom, courriel et date sont bien remplis (pour affichage réponses) */
-  			if ($nomErr = $courrielErr = $dateErr = "") {
+  			if ($nomErr == "" && $courrielErr == "" && $dateErr == "") {
   				$questionnaire_ok = TRUE;
   			}
 
@@ -121,10 +121,10 @@
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question1 = "oui") {
+							if ($question1 == "oui") {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
-								echo "<p class='jargon'>Raté. ";
+								echo "<p class='erreur'>Perdu. ";
 							}
 							echo("Les deux avions sont à 2000ft (deuxième ligne de l’étiquette), mais ils sont séparés latéralement de 6,86NM. La norme est donc respectée.</p>");
 						}
