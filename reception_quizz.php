@@ -27,9 +27,10 @@
 			$nomErr = $courrielErr = $dateErr = "";
 	  		$nom = $courriel = $date = $question1 = $question2 = $question3 = "";
 	  		$obl = "champs obligatoire";
-	  		$reponse1 = "";
-	  		$reponse2 = "";
-	  		$reponse3 = "";
+	  		$reponse1 = "oui";
+	  		$reponse2 = "LFRS";
+	  		$reponse3 = "phraséologie";
+	  		$score = 0;
 	  		$questionnaire_ok = FALSE;
 
 			/* fonctions qui accentuent la sécurité du formulaire (source : "https://www.w3schools.com/php/php_form_validation.asp" et le cours) */
@@ -65,16 +66,16 @@
 
 			if (!empty($_POST['courriel'])) {
 				$courriel = nettoyer($_POST['courriel']);
-			}
-			if (!filter_var($courriel, FILTER_VALIDATE_EMAIL)) {
+				if (!filter_var($courriel, FILTER_VALIDATE_EMAIL)) {
   				$courrielErr = "adresse non valide";
-  			} 
+				}
+			} 
 
   			if(!empty($_POST['date'])) {
   				$date = $_POST['date'];
-  			}
-  			if (!validateDate($date)) {
+  				if (!validateDate($date)) {
   				$dateErr = "date non valide";
+  				}
   			}
 
   			if (!empty($_POST['question1'])) {
@@ -114,14 +115,15 @@
 					<input type="text" name="date" value="<?php echo $date;?>"> <span class="erreur"><?php echo $dateErr;?></span>
 				</p>
 				<div class="questions">
-					<p>Question 1 : la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
+					<p><strong>Question 1 :</strong> la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/sepradar1.png" alt="image d’une séparation radar"></p>
 					<p><input type="radio" name="question1" <?php if (isset($question1) && $question1=="oui") echo "checked";?> value="oui">oui
 						<input type="radio" name="question1" <?php if (isset($question1) && $question1=="non") echo "checked";?> value="non">non</p>
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question1 == "oui") {
+							if ($question1 == $reponse1) {
+								$score += 1;
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. ";
@@ -130,19 +132,45 @@
 						}
 					?>
 
-					<p>Question 2 : quelle est la destination du xxx&nbsp;?</p>
+					<p><strong>Question 2 :</strong> quelle est la destination du xxx&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/strip.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="a") echo "checked";?> value="a">a
-						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="b") echo "checked";?> value="b">b
-						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="c") echo "checked";?> value="c">c</p>
+					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="B738") echo "checked";?> value="B738">B738
+						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="LFTH") echo "checked";?> value="LFTH">LFTH
+						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="LFRS") echo "checked";?> value="LFRS">LFRS</p>
 
-					<p>Question 3 : le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
+					<?php
+						if ($questionnaire_ok) {
+							if ($question2 == $reponse2) {
+								$score += 1;
+								echo "<p class='jargon'>Bonne réponse ! ";
+							} else {
+								echo "<p class='erreur'>Perdu. La destination est LFRS. ";
+							}
+							echo("L’aéroport de départ est donné par le code LFTH, celui d’arrivé par le code LFRS. B738 correspond au type d’avion.</p>");
+						}
+					?>
+
+					<p><strong>Question 3 :</strong> le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
 					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="communication non violente") echo "checked";?> value="communication non violente">la communication non violente</p>
 					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="standardisation") echo "checked";?> value="standardisation">la standardisation</p>
 					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="phraséologie") echo "checked";?> value="phraséologie">la phraséologie</p>
 					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="protocole TCP") echo "checked";?> value="protocole TCP">le protocole "transmission contrôleur-pilote"</p>
 
-					<p><input type="submit" value="Vérifier mes réponses"></p>
+					<?php
+						if ($questionnaire_ok) {
+							if ($question3 == $reponse3) {
+								$score += 1;
+								echo "<p class='jargon'>Bonne réponse ! ";
+							} else {
+								echo "<p class='erreur'>Perdu. La bonne réponse est «&nbsp;la phraséologie&nbsp». ";
+							}
+							echo("Le protocole 'TCP' n’est pas d’une grande utilité dans ce contexte... La communication non violente, elle, gagnerait à être plus connue.</p>
+								<p><strong>Votre score est de $score sur 3.</strong></p>");
+						} else {
+							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); // Le bouton disparaît après la première tentative
+						}
+					?>
+
 				</div>
 			</form>
 		</section>

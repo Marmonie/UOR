@@ -40,18 +40,18 @@
 					<input type="text" name="date" value=""> <span class="erreur"></span>
 				</p>
 				<div class="questions">
-					<p>Question 1 : la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
+					<p><strong>Question 1 :</strong> la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/sepradar1.png" alt="image d’une séparation radar"></p>
 					<p><input type="radio" name="question1"  value="oui">oui
 						<input type="radio" name="question1"  value="non">non</p>
 
-					<p>Question 2 : quelle est la destination du xxx&nbsp;?</p>
+					<p><strong>Question 2 :</strong> quelle est la destination du xxx&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/strip.png" alt="image d’un strip"></p>
 					<p><input type="radio" name="question2"  value="a">a
 						<input type="radio" name="question2"  value="b">b
 						<input type="radio" name="question2"  value="c">c</p>
 
-					<p>Question 3 : le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
+					<p><strong>Question 3 :</strong> le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
 					<p><input type="radio" name="question3" value="communication non violente">la communication non violente</p>
 					<p><input type="radio" name="question3" value="standardisation">la standardisation</p>
 					<p><input type="radio" name="question3" value="phraséologie">la phraséologie</p>
