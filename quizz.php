@@ -47,9 +47,9 @@
 
 					<p><strong>Question 2 :</strong> quelle est la destination du xxx&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/strip.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question2"  value="a">a
-						<input type="radio" name="question2"  value="b">b
-						<input type="radio" name="question2"  value="c">c</p>
+					<p><input type="radio" name="question2" value="B738">B738
+						<input type="radio" name="question2" value="LFTH">LFTH
+						<input type="radio" name="question2" value="LFRS">LFRS</p>
 
 					<p><strong>Question 3 :</strong> le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
 					<p><input type="radio" name="question3" value="communication non violente">la communication non violente</p>

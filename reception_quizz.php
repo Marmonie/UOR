@@ -169,6 +169,35 @@
 						} else {
 							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); // Le bouton disparaît après la première tentative
 						}
+
+						/* mySQL */
+						/* test connection
+						$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
+
+						if (!$conn) {
+							die("Connection failed : " . mysqli_connect_error());
+						} else {
+							echo "Connected successfully";
+						}*/
+
+						if ($questionnaire_ok) {
+							// connection bdd
+							$conn2 = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
+							if (!$conn2) {
+								die("Connection failed : " . mysqli_connect_error());
+							}
+
+							// insertion données questionnaire dans bdd
+							$sql = "INSERT INTO id21044620_atcodb.questionnaire (`clef`, `nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES (NULL, '$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
+
+							/* test insertion */
+							if (mysqli_query($conn2, $sql)) {
+								echo "Vos réponses ont bien été enregistrées.";
+							} else {
+								echo "Error : " . $sql . "<br>" . mysqli_error($conn2);
+							}
+						}
+						
 					?>
 
 				</div>
