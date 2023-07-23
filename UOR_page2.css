@@ -26,6 +26,7 @@ body {
 
 img {
 	padding: 0pt 10pt;
+	max-width: 100%;
 }
 
 /* barre de navigation - merci https://www.w3schools.com/Css/css_navbar_horizontal.asp */
@@ -106,4 +107,5 @@ li a:hover:not(.active) {
 
 .questions {
 	background-color: #F6F3EC;
+	padding: 14px 16px;
 }
