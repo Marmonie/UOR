@@ -132,7 +132,7 @@
 				}
 
 				// insertion données questionnaire dans bdd
-				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`, `question4`, `question5`) VALUES ('$nom', '$courriel', '$date', '$rep_user[0]', '$rep_user[1]', '$rep_user[2]', '$rep_user[3]', '$rep_user[4]')";
+				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`, `question4`, `question5`, `res1`, `res2`, `res3`, `res4`, `res5`) VALUES ('$nom', '$courriel', '$date', '$rep_user[0]', '$rep_user[1]', '$rep_user[2]', '$rep_user[3]', '$rep_user[4]', '$resultats_user[0]', '$resultats_user[1]', '$resultats_user[2]', '$resultats_user[3]', '$resultats_user[4]')";
 
 				/* test insertion */
 				if (mysqli_query($conn, $sql_insert)) {
@@ -145,8 +145,9 @@
 				$res_nb_correct1 = mysqli_query($conn, $sql_nb_correct1);
 
 				if (mysqli_num_rows($res_nb_correct1) > 0) {
+					echo "<p>Personnes ayant répondu correctement à la première question : </p>"
 					while($row = mysqli_fetch_assoc($res_nb_correct1)) {
-						echo "<p>Personnes ayant répondu correctement à la première question : " . $row['nom'] . "</p>";
+						echo "<p>" . $row['nom'] . "</p>";
 					}
 				} else {
 					echo "0 résultat";
