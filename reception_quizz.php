@@ -71,11 +71,15 @@
 				}
 			} 
 
+			// Si date entrée, vérifie son format ; sinon date = date du jour
+			date_default_timezone_set("Europe/Paris")
   			if(!empty($_POST['date'])) {
   				$date = $_POST['date'];
   				if (!validateDate($date)) {
   				$dateErr = "date non valide";
   				}
+  			} else {
+  				$date = date('d/m/Y')
   			}
 
   			if (!empty($_POST['question1'])) {
@@ -170,11 +174,11 @@
 							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); // Le bouton disparaît après la première tentative
 						}
 
-						/* mySQL */
+					/* mySQL */
 						/* test connection
-						$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
+						$conn_test = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
 
-						if (!$conn) {
+						if (!$conn_test) {
 							die("Connection failed : " . mysqli_connect_error());
 						} else {
 							echo "Connected successfully";
@@ -182,19 +186,31 @@
 
 						if ($questionnaire_ok) {
 							// connection bdd
-							$conn2 = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
-							if (!$conn2) {
+							$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
+							// test connection
+							if (!$conn) {
 								die("Connection failed : " . mysqli_connect_error());
 							}
 
 							// insertion données questionnaire dans bdd
-							$sql = "INSERT INTO id21044620_atcodb.questionnaire (`clef`, `nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES (NULL, '$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
+							$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES ('$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
 
 							/* test insertion */
-							if (mysqli_query($conn2, $sql)) {
+							if (mysqli_query($conn, $sql_insert)) {
 								echo "Vos réponses ont bien été enregistrées.";
 							} else {
-								echo "Error : " . $sql . "<br>" . mysqli_error($conn2);
+								echo "Error : " . $sql_insert . "<br>" . mysqli_error($conn);
+							}
+
+							$sql_nb_correct1 = "SELECT * FROM id21044620_atcodb.questionnaire WHERE question1 = 'oui'";
+							$res_nb_correct1 = mysqli_query($conn, $sql_nb_correct1);
+
+							if (mysqli_num_rows($res_nb_correct1) > 0) {
+								while($row = mysqli_fetch_assoc($res_nb_correct1)) {
+									echo "<p>Personnes ayant répondu correctement à la première question : " . $row['nom'] . "</p>";
+								}
+							} else {
+								echo "0 résultat";
 							}
 						}
 						
