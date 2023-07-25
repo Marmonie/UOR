@@ -67,6 +67,8 @@
 					<p><img class="pastropgrand" src="illustrations/sepradar2.png" alt="image d’une séparation radar"></p>
 					<p><input type="radio" name="question5" value="oui">oui
 						<input type="radio" name="question5" value="non">non</p>
+
+					<p><input type="submit" value="Vérifier mes réponses"></p>
 				</div>
 			</form>
 		</section>

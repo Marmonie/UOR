@@ -25,14 +25,12 @@
 <!--Traitement des réponses au questionnaire-->
 		<?php 
 			$nomErr = $courrielErr = $dateErr = "";
-	  		$nom = $courriel = $date = $question1 = $question2 = $question3 = "";
+	  		$nom = $courriel = $date = "";
 	  		$obl = "champs obligatoire";
-	  		$reponse1 = "oui";
-	  		$reponse2 = "B737";
-	  		$reponse3 = "phraséologie";
-	  		$reponse4 = "5000";
-	  		$reponse5 = "oui";
-	  		$score = 0;
+	  		$nom_questions = array("question1", "question2", "question3", "question4", "question5");
+	  		$rep_user = array();
+	  		$rep_correctes = array("oui", "B737", "phraséologie", "5000", "oui");
+	  		$resultats_user = array();
 	  		$questionnaire_ok = FALSE;
 
 			/* fonctions qui accentuent la sécurité du formulaire (source : "https://www.w3schools.com/php/php_form_validation.asp" et le cours) */
@@ -74,27 +72,36 @@
 			} 
 
 			// Si date entrée, vérifie son format ; sinon date = date du jour
-			date_default_timezone_set("Europe/Paris")
+			date_default_timezone_set("Europe/Paris");
   			if(!empty($_POST['date'])) {
   				$date = $_POST['date'];
   				if (!validateDate($date)) {
   				$dateErr = "date non valide";
   				}
   			} else {
-  				$date = date('d/m/Y')
+  				$date = date('d/m/Y');
   			}
 
-  			if (!empty($_POST['question1'])) {
-  				$question1 = $_POST['question1'];
-  			} 
+  			// remplissage de l’arrays 'rep_user' avec les réponses de l’utilisateur, "" si pas répondu
+  			for ($i = 0; $i < 5; $i++) {
+  				if (!empty($_POST[$nom_questions[$i]])) {
+  					array_push($rep_user, $_POST[$nom_questions[$i]]);
+  				} else {
+  					array_push($rep_user, "");
+  				}
+  			}
 
-  			if (!empty($_POST['question2'])) {
-  				$question2 = $_POST['question2'];
-  			} 
+  			// remplissage de l’array 'resultats_user' avec 0 si rep fausse, 1 sinon
+  			for ($i = 0; $i < 5; $i++) {
+  				if ($rep_user[$i] == $rep_correctes[$i]) {
+  					array_push($resultats_user, 1);
+  				} else {
+  					array_push($resultats_user, 0);
+  				}
+  			}
 
-  			if (!empty($_POST['question3'])) {
-  				$question3 = $_POST['question3'];
-  			} 
+  			// score de l’utilisateur
+  			$score_user = array_sum($resultats_user);
 
   			/* Vérification que nom, courriel et date sont bien remplis (pour affichage réponses) */
   			if ($nomErr == "" && $courrielErr == "" && $dateErr == "") {
@@ -103,9 +110,10 @@
 
   		?>
 
+<!--Accès à la base de données-->
 		<?php
 
-		/* mySQL */
+		/* MySQLi */
 			/* test connection
 			$conn_test = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
 
@@ -124,7 +132,7 @@
 				}
 
 				// insertion données questionnaire dans bdd
-				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES ('$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
+				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`, `question4`, `question5`) VALUES ('$nom', '$courriel', '$date', '$rep_user[0]', '$rep_user[1]', '$rep_user[2]', '$rep_user[3]', '$rep_user[4]')";
 
 				/* test insertion */
 				if (mysqli_query($conn, $sql_insert)) {
@@ -147,7 +155,7 @@
 			
 		?>
 
-<!--Le Questionnaire-->
+<!--Le questionnaire + affichage réponses-->
 		<section>
 			<p class="erreur">* champs obligatoire</p>
 			<!--methode POST pour une question de sécurité-->
@@ -167,13 +175,14 @@
 				<div class="questions">
 					<p><strong>Question 1 :</strong> la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/sepradar1.png" alt="image d’une séparation radar"></p>
-					<p><input type="radio" name="question1" <?php if (isset($question1) && $question1=="oui") echo "checked";?> value="oui">oui
-						<input type="radio" name="question1" <?php if (isset($question1) && $question1=="non") echo "checked";?> value="non">non</p>
+					<p><input type="radio" name="question1" <?php if (isset($rep_user[0]) && $rep_user[0]=="oui") echo "checked";?> value="oui">oui
+						<input type="radio" name="question1" <?php if (isset($rep_user[0]) && $rep_user[0]=="non") echo "checked";?> value="non">non</p>
 
 					<?php
+						// si nom, courriel et date remplis correctement
 						if ($questionnaire_ok) {
-							if ($question1 == $reponse1) {
-								$score += 1;
+							// si bonne réponse
+							if ($resultats_user[0]==1) {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. ";
@@ -184,14 +193,13 @@
 
 					<p><strong>Question 2 :</strong> concernant le vol TRA85N</p>
 					<p><img class="pastropgrand" src="illustrations/strip_tra.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="transat") echo "checked";?> value="transat">Son indicatif est «&nbsp;Air Transat 85 Novembre&nbsp;» (<em>'Novembre' est le nom de la lettre 'N' dans l’alphabet aéronautique)</p>
-					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="B737") echo "checked";?> value="B737">Ce vol s’effectue dans un Boeing 737-800</p>
-					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="badod") echo "checked";?> value="badod">Il est à destination de Badod, en Inde</p>
+					<p><input type="radio" name="question2" <?php if (isset($rep_user[1]) && $rep_user[1]=="transat") echo "checked";?> value="transat">Son indicatif est «&nbsp;Air Transat 85 Novembre&nbsp;» (<em>'Novembre' est le nom de la lettre 'N' dans l’alphabet aéronautique)</em></p>
+					<p><input type="radio" name="question2" <?php if (isset($rep_user[1]) && $rep_user[1]=="B737") echo "checked";?> value="B737">Ce vol s’effectue dans un Boeing 737-800</p>
+					<p><input type="radio" name="question2" <?php if (isset($rep_user[1]) && $rep_user[1]=="badod") echo "checked";?> value="badod">Il est à destination de Badod, en Inde</p>
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question2 == $reponse2) {
-								$score += 1;
+							if ($resultats_user[1]==1) {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. ";
@@ -201,15 +209,14 @@
 					?>
 
 					<p><strong>Question 3 :</strong> le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
-					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="communication non violente") echo "checked";?> value="communication non violente">la communication non violente</p>
-					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="standardisation") echo "checked";?> value="standardisation">la standardisation</p>
-					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="phraséologie") echo "checked";?> value="phraséologie">la phraséologie</p>
-					<p><input type="radio" name="question3" <?php if (isset($question3) && $question3=="protocole TCP") echo "checked";?> value="protocole TCP">le protocole "transmission contrôleur-pilote"</p>
+					<p><input type="radio" name="question3" <?php if (isset($rep_user[2]) && $rep_user[2]=="communication non violente") echo "checked";?> value="communication non violente">la communication non violente</p>
+					<p><input type="radio" name="question3" <?php if (isset($rep_user[2]) && $rep_user[2]=="standardisation") echo "checked";?> value="standardisation">la standardisation</p>
+					<p><input type="radio" name="question3" <?php if (isset($rep_user[2]) && $rep_user[2]=="phraséologie") echo "checked";?> value="phraséologie">la phraséologie</p>
+					<p><input type="radio" name="question3" <?php if (isset($rep_user[2]) && $rep_user[2]=="protocole TCP") echo "checked";?> value="protocole TCP">le protocole "transmission contrôleur-pilote"</p>
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question3 == $reponse3) {
-								$score += 1;
+							if ($resultats_user[2]==1) {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. La bonne réponse est «&nbsp;la phraséologie&nbsp». ";
@@ -220,14 +227,13 @@
 
 					<p><strong>Question 4 :</strong> le vol EZY51NM a été autorisé à descendre vers </p>
 					<p><img class="pastropgrand" src="illustrations/strip_ezy.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="6360") echo "checked";?> value="6360">une altitude de 6360ft</p>
-					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="5000") echo "checked";?> value="5000">une altitude de 5000ft</p>
-					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="110") echo "checked";?> value="110">un niveau de vol 110 (environ 11000ft)</p>
+					<p><input type="radio" name="question4" <?php if (isset($rep_user[3]) && $rep_user[3]=="6360") echo "checked";?> value="6360">une altitude de 6360ft</p>
+					<p><input type="radio" name="question4" <?php if (isset($rep_user[3]) && $rep_user[3]=="5000") echo "checked";?> value="5000">une altitude de 5000ft</p>
+					<p><input type="radio" name="question4" <?php if (isset($rep_user[3]) && $rep_user[3]=="110") echo "checked";?> value="110">un niveau de vol 110 (environ 11000ft)</p>
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question4 == $reponse4) {
-								$score += 1;
+							if ($resultats_user[3]==1) {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. Il est autorisé à descendre à 5000ft. ";
@@ -238,18 +244,17 @@
 
 					<p><strong>Question 5 :</strong> la norme de séparation radar est-elle respectée entre le DLH11P et le EZY34XF&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/sepradar2.png" alt="image d’une séparation radar"></p>
-					<p><input type="radio" name="question5" <?php if (isset($question5) && $question5=="oui") echo "checked";?> value="oui">oui
-						<input type="radio" name="question5" <?php if (isset($question5) && $question5=="non") echo "checked";?> value="non">non</p>
+					<p><input type="radio" name="question5" <?php if (isset($rep_user[4]) && $rep_user[4]=="oui") echo "checked";?> value="oui">oui
+						<input type="radio" name="question5" <?php if (isset($rep_user[4]) && $rep_user[4]=="non") echo "checked";?> value="non">non</p>
 
 					<?php
 						if ($questionnaire_ok) {
-							if ($question5 == $reponse5) {
-								$score += 1;
+							if ($resultats_user[4]==1) {
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
 								echo "<p class='erreur'>Perdu. ";
 							}
-							echo("Les deux avions sont séparés latéralement de seulement 2,26NM, cependant, le premier est à 900ft, tandis que le deuxième est à un niveau 110 (environ 11000ft), plus de 10000ft les séparent. C’était un piège, en réalité on est large&nbsp;!</p><p><strong>Votre score est de $score sur 5.</strong></p>");
+							echo("Les deux avions sont séparés latéralement de seulement 2,26NM, cependant, le premier est à 900ft, tandis que le deuxième est à un niveau 110 (environ 11000ft), plus de 10000ft les séparent. C’était un piège, en réalité on est large&nbsp;!</p><p><strong>Votre score est de $score_user sur 5.</strong></p>");
 						} else {
 							// Le bouton disparaît après la première tentative
 							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); 
