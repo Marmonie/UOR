@@ -12,7 +12,7 @@
   	</head>
   	<body>
   		<h1>L’heure du quizz</h1>
-  		<p><blockquote class="citation">Remise de gaz&nbsp;!</blockquote></p>
+  		<p><blockquote class="citation">Serez-vous à la hauteur&nbsp;?</blockquote></p>
 
 <!--La barre de navigation-->
   		<ul class="navbar">
@@ -42,14 +42,14 @@
 				<div class="questions">
 					<p><strong>Question 1 :</strong> la norme de séparation radar est-elle respectée entre le SWW264 et le DIFCB&nbsp;?</p>
 					<p><img class="pastropgrand" src="illustrations/sepradar1.png" alt="image d’une séparation radar"></p>
-					<p><input type="radio" name="question1"  value="oui">oui
-						<input type="radio" name="question1"  value="non">non</p>
+					<p><input type="radio" name="question1" value="oui">oui
+						<input type="radio" name="question1" value="non">non</p>
 
-					<p><strong>Question 2 :</strong> quelle est la destination du xxx&nbsp;?</p>
-					<p><img class="pastropgrand" src="illustrations/strip.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question2" value="B738">B738
-						<input type="radio" name="question2" value="LFTH">LFTH
-						<input type="radio" name="question2" value="LFRS">LFRS</p>
+					<p><strong>Question 2 :</strong> concernant le vol TRA85N</p>
+					<p><img class="pastropgrand" src="illustrations/strip_tra.png" alt="image d’un strip"></p>
+					<p><input type="radio" name="question2" value="transat">Son indicatif est «&nbsp;Air Transat 85 Novembre&nbsp;» (<em>'Novembre' est le nom de la lettre 'N' dans l’alphabet aéronautique)</em></p>
+					<p><input type="radio" name="question2" value="B737">Ce vol s’effectue dans un Boeing 737-800</p>
+					<p><input type="radio" name="question2" value="badod">Il est à destination de Badod, en Inde</p>
 
 					<p><strong>Question 3 :</strong> le language utilisé par les pilotes et les contrôleurs pour communiquer entre eux s’appelle :</p>
 					<p><input type="radio" name="question3" value="communication non violente">la communication non violente</p>
@@ -57,7 +57,16 @@
 					<p><input type="radio" name="question3" value="phraséologie">la phraséologie</p>
 					<p><input type="radio" name="question3" value="protocole TCP">le protocole "transmission contrôleur-pilote"</p>
 
-					<p><input type="submit" value="Vérifier mes réponses"></p>
+					<p><strong>Question 4 :</strong> le vol EZY51NM a été autorisé à descendre vers </p>
+					<p><img class="pastropgrand" src="illustrations/strip_ezy.png" alt="image d’un strip"></p>
+					<p><input type="radio" name="question4" value="6360">une altitude de 6360ft</p>
+					<p><input type="radio" name="question4" value="5000">une altitude de 5000ft</p>
+					<p><input type="radio" name="question4" value="110">un niveau de vol 110 (environ 11000ft)</p>
+
+					<p><strong>Question 5 :</strong> la norme de séparation radar est-elle respectée entre le DLH11P et le EZY34XF&nbsp;?</p>
+					<p><img class="pastropgrand" src="illustrations/sepradar2.png" alt="image d’une séparation radar"></p>
+					<p><input type="radio" name="question5" value="oui">oui
+						<input type="radio" name="question5" value="non">non</p>
 				</div>
 			</form>
 		</section>

@@ -28,8 +28,10 @@
 	  		$nom = $courriel = $date = $question1 = $question2 = $question3 = "";
 	  		$obl = "champs obligatoire";
 	  		$reponse1 = "oui";
-	  		$reponse2 = "LFRS";
+	  		$reponse2 = "B737";
 	  		$reponse3 = "phraséologie";
+	  		$reponse4 = "5000";
+	  		$reponse5 = "oui";
 	  		$score = 0;
 	  		$questionnaire_ok = FALSE;
 
@@ -99,7 +101,51 @@
   				$questionnaire_ok = TRUE;
   			}
 
-  			?>
+  		?>
+
+		<?php
+
+		/* mySQL */
+			/* test connection
+			$conn_test = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
+
+			if (!$conn_test) {
+				die("Connection failed : " . mysqli_connect_error());
+			} else {
+				echo "Connected successfully";
+			}*/
+
+			if ($questionnaire_ok) {
+				// connection bdd
+				$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
+				// test connection
+				if (!$conn) {
+					die("Connection failed : " . mysqli_connect_error());
+				}
+
+				// insertion données questionnaire dans bdd
+				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES ('$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
+
+				/* test insertion */
+				if (mysqli_query($conn, $sql_insert)) {
+					echo "Vos réponses ont bien été enregistrées.";
+				} else {
+					echo "Error : " . $sql_insert . "<br>" . mysqli_error($conn);
+				}
+
+				$sql_nb_correct1 = "SELECT * FROM id21044620_atcodb.questionnaire WHERE question1 = 'oui'";
+				$res_nb_correct1 = mysqli_query($conn, $sql_nb_correct1);
+
+				if (mysqli_num_rows($res_nb_correct1) > 0) {
+					while($row = mysqli_fetch_assoc($res_nb_correct1)) {
+						echo "<p>Personnes ayant répondu correctement à la première question : " . $row['nom'] . "</p>";
+					}
+				} else {
+					echo "0 résultat";
+				}
+			}
+			
+		?>
 
 <!--Le Questionnaire-->
 		<section>
@@ -136,11 +182,11 @@
 						}
 					?>
 
-					<p><strong>Question 2 :</strong> quelle est la destination du xxx&nbsp;?</p>
-					<p><img class="pastropgrand" src="illustrations/strip.png" alt="image d’un strip"></p>
-					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="B738") echo "checked";?> value="B738">B738
-						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="LFTH") echo "checked";?> value="LFTH">LFTH
-						<input type="radio" name="question2" <?php if (isset($question2) && $question2=="LFRS") echo "checked";?> value="LFRS">LFRS</p>
+					<p><strong>Question 2 :</strong> concernant le vol TRA85N</p>
+					<p><img class="pastropgrand" src="illustrations/strip_tra.png" alt="image d’un strip"></p>
+					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="transat") echo "checked";?> value="transat">Son indicatif est «&nbsp;Air Transat 85 Novembre&nbsp;» (<em>'Novembre' est le nom de la lettre 'N' dans l’alphabet aéronautique)</p>
+					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="B737") echo "checked";?> value="B737">Ce vol s’effectue dans un Boeing 737-800</p>
+					<p><input type="radio" name="question2" <?php if (isset($question2) && $question2=="badod") echo "checked";?> value="badod">Il est à destination de Badod, en Inde</p>
 
 					<?php
 						if ($questionnaire_ok) {
@@ -148,9 +194,9 @@
 								$score += 1;
 								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
-								echo "<p class='erreur'>Perdu. La destination est LFRS. ";
+								echo "<p class='erreur'>Perdu. ";
 							}
-							echo("L’aéroport de départ est donné par le code LFTH, celui d’arrivé par le code LFRS. B738 correspond au type d’avion.</p>");
+							echo("'B738' est le code pour un Boeing 737 de la série 800. Son indicatif est «&nbsp;Transavia 85 Novembre&nbsp;», et sa destination Amsterdam (code EHAM). Badod est simplement le nom d’un point sur sa route.</p>");
 						}
 					?>
 
@@ -168,52 +214,46 @@
 							} else {
 								echo "<p class='erreur'>Perdu. La bonne réponse est «&nbsp;la phraséologie&nbsp». ";
 							}
-							echo("Le protocole 'TCP' n’est pas d’une grande utilité dans ce contexte... La communication non violente, elle, gagnerait à être plus connue.</p>
-								<p><strong>Votre score est de $score sur 3.</strong></p>");
-						} else {
-							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); // Le bouton disparaît après la première tentative
+							echo("Le protocole 'TCP' n’est pas d’une grande utilité dans ce contexte... La communication non violente, elle, gagnerait à être plus connue.</p>");
 						}
+					?>
 
-					/* mySQL */
-						/* test connection
-						$conn_test = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
+					<p><strong>Question 4 :</strong> le vol EZY51NM a été autorisé à descendre vers </p>
+					<p><img class="pastropgrand" src="illustrations/strip_ezy.png" alt="image d’un strip"></p>
+					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="6360") echo "checked";?> value="6360">une altitude de 6360ft</p>
+					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="5000") echo "checked";?> value="5000">une altitude de 5000ft</p>
+					<p><input type="radio" name="question4" <?php if (isset($question4) && $question4=="110") echo "checked";?> value="110">un niveau de vol 110 (environ 11000ft)</p>
 
-						if (!$conn_test) {
-							die("Connection failed : " . mysqli_connect_error());
-						} else {
-							echo "Connected successfully";
-						}*/
-
+					<?php
 						if ($questionnaire_ok) {
-							// connection bdd
-							$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
-							// test connection
-							if (!$conn) {
-								die("Connection failed : " . mysqli_connect_error());
-							}
-
-							// insertion données questionnaire dans bdd
-							$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`) VALUES ('$nom', '$courriel', '$date', '$question1', '$question2', '$question3')";
-
-							/* test insertion */
-							if (mysqli_query($conn, $sql_insert)) {
-								echo "Vos réponses ont bien été enregistrées.";
+							if ($question4 == $reponse4) {
+								$score += 1;
+								echo "<p class='jargon'>Bonne réponse ! ";
 							} else {
-								echo "Error : " . $sql_insert . "<br>" . mysqli_error($conn);
+								echo "<p class='erreur'>Perdu. Il est autorisé à descendre à 5000ft. ";
 							}
-
-							$sql_nb_correct1 = "SELECT * FROM id21044620_atcodb.questionnaire WHERE question1 = 'oui'";
-							$res_nb_correct1 = mysqli_query($conn, $sql_nb_correct1);
-
-							if (mysqli_num_rows($res_nb_correct1) > 0) {
-								while($row = mysqli_fetch_assoc($res_nb_correct1)) {
-									echo "<p>Personnes ayant répondu correctement à la première question : " . $row['nom'] . "</p>";
-								}
-							} else {
-								echo "0 résultat";
-							}
+							echo("'6360' correspond à un code transpondeur, c’est un nombre détecté par le radar qui permet à ce dernier d’identifier le vol ; '110' est un cap magnétique (la direction à prendre par rapport à la rose des vents).</p>");
 						}
-						
+					?>
+
+					<p><strong>Question 5 :</strong> la norme de séparation radar est-elle respectée entre le DLH11P et le EZY34XF&nbsp;?</p>
+					<p><img class="pastropgrand" src="illustrations/sepradar2.png" alt="image d’une séparation radar"></p>
+					<p><input type="radio" name="question5" <?php if (isset($question5) && $question5=="oui") echo "checked";?> value="oui">oui
+						<input type="radio" name="question5" <?php if (isset($question5) && $question5=="non") echo "checked";?> value="non">non</p>
+
+					<?php
+						if ($questionnaire_ok) {
+							if ($question5 == $reponse5) {
+								$score += 1;
+								echo "<p class='jargon'>Bonne réponse ! ";
+							} else {
+								echo "<p class='erreur'>Perdu. ";
+							}
+							echo("Les deux avions sont séparés latéralement de seulement 2,26NM, cependant, le premier est à 900ft, tandis que le deuxième est à un niveau 110 (environ 11000ft), plus de 10000ft les séparent. C’était un piège, en réalité on est large&nbsp;!</p><p><strong>Votre score est de $score sur 5.</strong></p>");
+						} else {
+							// Le bouton disparaît après la première tentative
+							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); 
+						}
 					?>
 
 				</div>
