@@ -12,7 +12,7 @@
   	</head>
   	<body>
   		<h1>L’heure du quizz</h1>
-  		<p><blockquote class="citation">Remise de gaz&nbsp;!</blockquote></p>
+  		<p><blockquote class="citation">Qualifié&nbsp;!</blockquote></p>
 
 <!--La barre de navigation-->
   		<ul class="navbar">
@@ -27,10 +27,10 @@
 			$nomErr = $courrielErr = $dateErr = "";
 	  		$nom = $courriel = $date = "";
 	  		$obl = "champs obligatoire";
-	  		$nom_questions = array("question1", "question2", "question3", "question4", "question5");
-	  		$rep_user = array();
-	  		$rep_correctes = array("oui", "B737", "phraséologie", "5000", "oui");
-	  		$resultats_user = array();
+	  		$nom_questions = array("question1", "question2", "question3", "question4", "question5"); // vecteur des noms des questions
+	  		$rep_user = array(); // vecteur des réponses de l’utilisateur
+	  		$rep_correctes = array("oui", "B737", "phraséologie", "5000", "oui"); // vecteur des réponses justes
+	  		$resultats_user = array(); // vecteur de 0 ( si rep juste) et 1 (si faute)
 	  		$questionnaire_ok = FALSE;
 
 			/* fonctions qui accentuent la sécurité du formulaire (source : "https://www.w3schools.com/php/php_form_validation.asp" et le cours) */
@@ -47,23 +47,19 @@
     			return $d && $d->format($format) == $date;
 			}
 
-			/*exemple du cours
-			foreach($_POST as $clef => $valeur){
-				$nclef = nettoyer($valeur);
-				echo"<p>" . $clef . " vaut " . $nclef . "</p>";
-			}*/
-
 			/* Vérification de la validité des réponses, affichage des erreurs le cas échéant */
+			// nom
 			if (empty($_POST['nom'])) {
 				$nomErr = $obl;
 			} else {
 				$nom = nettoyer($_POST['nom']);
 				// vérifie si nom contient seulement lettres, chiffres et espaces
-				if (!preg_match("/^[0-9a-zA-Z-' ]*$/",$nom)) {
+				if (!preg_match("/^[0-9a-zA-Z-' éèô]*$/",$nom)) {
   				$nomErr = "seulement lettres, chiffres et espaces autorisés";
   				}
 			} 
 
+			// courriel
 			if (!empty($_POST['courriel'])) {
 				$courriel = nettoyer($_POST['courriel']);
 				if (!filter_var($courriel, FILTER_VALIDATE_EMAIL)) {
@@ -71,7 +67,7 @@
 				}
 			} 
 
-			// Si date entrée, vérifie son format ; sinon date = date du jour
+			// date - si date entrée, vérifie son format ; sinon date = date du jour
 			date_default_timezone_set("Europe/Paris");
   			if(!empty($_POST['date'])) {
   				$date = $_POST['date'];
@@ -114,15 +110,6 @@
 		<?php
 
 		/* MySQLi */
-			/* test connection
-			$conn_test = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice");
-
-			if (!$conn_test) {
-				die("Connection failed : " . mysqli_connect_error());
-			} else {
-				echo "Connected successfully";
-			}*/
-
 			if ($questionnaire_ok) {
 				// connection bdd
 				$conn = mysqli_connect("localhost", "id21044620_atco", "icna11b@Nice", "id21044620_atcodb");
@@ -131,7 +118,7 @@
 					die("Connection failed : " . mysqli_connect_error());
 				}
 
-				// insertion données questionnaire dans bdd
+				// insertion réponses questionnaire dans bdd
 				$sql_insert = "INSERT INTO id21044620_atcodb.questionnaire (`nom`, `courriel`, `date`, `question1`, `question2`, `question3`, `question4`, `question5`, `res1`, `res2`, `res3`, `res4`, `res5`) VALUES ('$nom', '$courriel', '$date', '$rep_user[0]', '$rep_user[1]', '$rep_user[2]', '$rep_user[3]', '$rep_user[4]', '$resultats_user[0]', '$resultats_user[1]', '$resultats_user[2]', '$resultats_user[3]', '$resultats_user[4]')";
 
 				/* test insertion */
@@ -139,19 +126,11 @@
 					echo "Vos réponses ont bien été enregistrées.";
 				} else {
 					echo "Error : " . $sql_insert . "<br>" . mysqli_error($conn);
-				}
+				} 
 
-				$sql_nb_correct1 = "SELECT * FROM id21044620_atcodb.questionnaire WHERE question1 = 'oui'";
-				$res_nb_correct1 = mysqli_query($conn, $sql_nb_correct1);
-
-				if (mysqli_num_rows($res_nb_correct1) > 0) {
-					echo "<p>Personnes ayant répondu correctement à la première question : </p>"
-					while($row = mysqli_fetch_assoc($res_nb_correct1)) {
-						echo "<p>" . $row['nom'] . "</p>";
-					}
-				} else {
-					echo "0 résultat";
-				}
+				// récupération du nombre de lignes dans la table
+				$sql_nb_participants = "SELECT COUNT(`clef`) FROM id21044620_atcodb.questionnaire";
+				$nb_participants = mysqli_fetch_row(mysqli_query($conn, $sql_nb_participants))[0];
 			}
 			
 		?>
@@ -180,7 +159,7 @@
 						<input type="radio" name="question1" <?php if (isset($rep_user[0]) && $rep_user[0]=="non") echo "checked";?> value="non">non</p>
 
 					<?php
-						// si nom, courriel et date remplis correctement
+						// affichage réponse si nom, courriel et date remplis correctement
 						if ($questionnaire_ok) {
 							// si bonne réponse
 							if ($resultats_user[0]==1) {
@@ -189,7 +168,13 @@
 								echo "<p class='erreur'>Perdu. ";
 							}
 							echo("Les deux avions sont à 2000ft (deuxième ligne de l’étiquette), mais ils sont séparés latéralement de 6,86NM. La norme est donc respectée.</p>");
+
+							// affichage pourcentage bonne réponse à la question
+							$sql_nb_res1_correct = "SELECT SUM(`res1`) FROM id21044620_atcodb.questionnaire";
+							$nb_res1_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res1_correct))[0];
+							echo "<p>" . round($nb_res1_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p>";
 						}
+
 					?>
 
 					<p><strong>Question 2 :</strong> concernant le vol TRA85N</p>
@@ -206,6 +191,11 @@
 								echo "<p class='erreur'>Perdu. ";
 							}
 							echo("'B738' est le code pour un Boeing 737 de la série 800. Son indicatif est «&nbsp;Transavia 85 Novembre&nbsp;», et sa destination Amsterdam (code EHAM). Badod est simplement le nom d’un point sur sa route.</p>");
+
+							// affichage pourcentage bonne réponse à la question
+							$sql_nb_res2_correct = "SELECT SUM(`res2`) FROM id21044620_atcodb.questionnaire";
+							$nb_res2_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res2_correct))[0];
+							echo "<p>" . round($nb_res2_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p>";
 						}
 					?>
 
@@ -223,6 +213,11 @@
 								echo "<p class='erreur'>Perdu. La bonne réponse est «&nbsp;la phraséologie&nbsp». ";
 							}
 							echo("Le protocole 'TCP' n’est pas d’une grande utilité dans ce contexte... La communication non violente, elle, gagnerait à être plus connue.</p>");
+
+							// affichage pourcentage bonne réponse à la question
+							$sql_nb_res3_correct = "SELECT SUM(`res3`) FROM id21044620_atcodb.questionnaire";
+							$nb_res3_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res3_correct))[0];
+							echo "<p>" . round($nb_res3_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p>";
 						}
 					?>
 
@@ -240,6 +235,11 @@
 								echo "<p class='erreur'>Perdu. Il est autorisé à descendre à 5000ft. ";
 							}
 							echo("'6360' correspond à un code transpondeur, c’est un nombre détecté par le radar qui permet à ce dernier d’identifier le vol ; '110' est un cap magnétique (la direction à prendre par rapport à la rose des vents).</p>");
+
+							// affichage pourcentage bonne réponse à la question
+							$sql_nb_res4_correct = "SELECT SUM(`res4`) FROM id21044620_atcodb.questionnaire";
+							$nb_res4_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res4_correct))[0];
+							echo "<p>" . round($nb_res4_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p>";
 						}
 					?>
 
@@ -255,9 +255,25 @@
 							} else {
 								echo "<p class='erreur'>Perdu. ";
 							}
-							echo("Les deux avions sont séparés latéralement de seulement 2,26NM, cependant, le premier est à 900ft, tandis que le deuxième est à un niveau 110 (environ 11000ft), plus de 10000ft les séparent. C’était un piège, en réalité on est large&nbsp;!</p><p><strong>Votre score est de $score_user sur 5.</strong></p>");
+							echo("Les deux avions sont séparés latéralement de seulement 2,26NM, cependant, le premier est à 900ft, tandis que le deuxième est à un niveau 110 (environ 11000ft), plus de 10000ft les séparent. C’était un piège, en réalité on est large&nbsp;!</p>"); 
+
+							// affichage pourcentage bonne réponse à la question
+							$sql_nb_res5_correct = "SELECT SUM(`res5`) FROM id21044620_atcodb.questionnaire";
+							$nb_res5_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res5_correct))[0];
+							echo "<p>" . round($nb_res5_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p><p><strong>Votre score est de $score_user sur 5.</strong></p>
+								<p>" . $nb_participants . " personnes ont participé jusqu’à présent. Merci à ";
+
+							// affichage nom des participants
+							$sql_noms = "SELECT `nom` FROM id21044620_atcodb.questionnaire";
+							$noms_participants = mysqli_query($conn, $sql_noms);
+							if (mysqli_num_rows($noms_participants) > 0) {
+								while ($row = mysqli_fetch_assoc($noms_participants)) {
+									echo $row['nom'] . ", ";
+								}
+								echo "pour leur participation&nbsp;!</p>";
+							}
 						} else {
-							// Le bouton disparaît après la première tentative
+							// Le bouton "Vérifier mes réponses" disparaît après la première tentative
 							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); 
 						}
 					?>
