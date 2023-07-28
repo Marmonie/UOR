@@ -100,7 +100,12 @@ li a:hover:not(.active) {
 	padding: 0;
 }
 
-/* quizz -- ne fonctionnent pas :'( */
+.basdepage {
+	text-align: center;
+	color: #5577D1;
+}
+
+/* quizz */
 .erreur {
 	color: #E06C43;
 }
