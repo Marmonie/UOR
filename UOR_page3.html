@@ -15,8 +15,8 @@
     	<blockquote class="citation">Le contrôleur aérien, c’est celui qui contrôle les billets dans l’avion&nbsp;?</blockquote>
 		<section>
 			<ul class="navbar">
-				<li class="l"><a href="index.html">Accueil JS</a></li>
-				<li class="l"><a class="active" href="UOR_page2.html">Accueil CSS</a></li>
+				<li class="l"><a class="active" href="index.html">Accueil JS</a></li>
+				<li class="l"><a href="UOR_page2.html">Accueil CSS</a></li>
 				<li class="l"><a href="UOR_page1.html">Accueil HTML</a></li>
 				<li class="r"><a href="quizz.html">Quizz</a></li>
 			</ul>
@@ -59,17 +59,63 @@
 						</ul>
 			</div>
 		</section>
-		<section class="clearfix, zoom">
-			<ul class="pointless"><!--rendre les boutons cliquables-->
-				<li class="l, inline"><strong>Zoom sur...</strong></li>
-				<li class="inline, r"><button type="button"> &gt;&gt;</button></li>
-				<li class="inline, r"><larger> un strip </larger></li>
-				<li class="inline, r"><button type="button"> &lt;&lt;</button></li>
+
+<!--code JS pour modifier titre et contenu de l’encart "zoom sur"-->
+		<script type="text/javascript">
+			// les variables _txt correspondent au corps du paragraphe
+			const phraseo_txt = 'La phraséologie est un langage proche de la langue parlée, mais qui utilise un <strong>vocabulaire restreint et des tournures de phrases imposées</strong>. C’est une langue vivante, qui évolue perpétuellement, au gré des incidents reportés par les différents acteurs de l’aéronautique. Un exemple simple : si un contrôleur dit à un pilote qui vole à 5000ft «&nbsp;descendez deux mille pieds&nbsp;», cela peut être compris de deux manières. La première, «&nbsp;descendez 2000ft&nbsp;», amènera le pilote à descendre à 2000ft ; la deuxième, «&nbsp;descendez de 1000ft&nbsp;», le fera descendre seulement à 4000ft. Pour lever le doute, lorsqu’il autorise un avion vers 2000ft, le contrôleur doit systématiquement utilisé le mot "altitude" : «&nbsp;descendez altitude 2000ft&nbsp;». La phraséologie existe en plusieurs langues ; en France, pilotes et contrôleurs peuvent parler français ou anglais entre eux. <strong>C’est le pilote qui impose sa langue</strong> lors du premier échange. En anglais, les mots "for" et "to" sont à proscrire dans la plupart des cas, puisqu’ils peuvent être compris "four" et "two". Derrière ces règles simples se cache un enjeu de sécurité important.';
+			const sepradar_txt = '<img class="r" src="illustrations/sepradar_zoom2.png" alt="Une image radar">La norme de séparation se décline en deux conditions, dont l’une au moins doit être respectée : une <strong>séparation latérale de 3Nm minimum</strong> (environ 5,5km), et une <strong>séparartion verticale de 1000ft minimum</strong> (environ 300 mètres). L’espacement latérale minimale est relativement grand : c’est dû à l’imprécision des radars. Cette distance dépend en réalité des centres de contrôle, et peut monter jusqu’à 8Nm (presque 15km). L’espacement horizontal est plus précis, il est permis par les anémomètres à l’intérieur des avions, qui mesurent la pression extérieure et la convertissent en altitude. Sur l’image de droite, on voit les représentations de deux avions sur une image radar, avec pour chacun une <span class="jargon">étiquette</span> donnant des informations essentielles : en première ligne, l’immatriculation ou l’indicatif de vol ; en deuxième ligne l’altitude ou le niveau de vol entre autres. Le DIFCB est à 2000ft, le AIZ731 à 3200ft en descente (petite flèche vers le bas à côté de l’altitude). S’il continue ainsi, la séparation verticale va bientôt passer en dessous de 1000ft&nbsp;! On vérifie alors la distance qui les sépare grâce au <span class="jargon">vecteur mesure</span> : la dernière ligne de l’encadré blanc montre que ces deux avions sont séparés de 3,04Nm. C’est un magnifique exemple d’un croisement fin.';
+			const strip_txt = '<img class="pastropgrand" src="illustrations/strip.png" alt="La photo d’un strip">Un strip contient un grand nombre d’informations, souvent codifiée. L’espace de gauche donne les éléments généraux du vol. Entre autres, <strong>TVF7217</strong> (à prononcer «&nbsp;france soleil soixante-douze dix-sept&nbsp;») est l’<span class="jargon">indicatif du vol</span>&nbsp;; <strong>B738</strong> est le <span class="jargon">type d’avion</span>, un Boeing 737-800&nbsp;; <strong>LFTH</strong> et <strong>LFRS</strong> sont les <span class="jargon">codes <abbr title="Organisation de l’Aviation Civile Internationale">OACI</abbr></span> des aéroports de départ, Toulon-Hyères, et d’arrivée, Nantes-Atlantique. Un peu plus à droite, <strong>JULEE PADKO FJR</strong> sont les noms des points que le pilote a prévu de survoler (<span class="jargon">sa route</span>) en dessous desquels on peut également lire leurs heures de survol prévues. Encore à droite, les nombres <strong>2000 ... 170</strong> représentent les <span class="jargon">altitudes</span> ou <span class="jargon">niveaux de vol</span> que le contrôleur est susceptible d’autoriser.';
+
+			// les variables _ttl correspondent au titre de l’encart
+			const strip_ttl = '<larger> un strip </larger>';
+			const phraseo_ttl = '<larger> la phraséologie </larger>';
+			const sepradar_ttl = '<larger> la norme de séparation </larger>';
+
+			/* les fonctions next et previous des deux boutons dépendent de ce qui est affiché dans le paragraphe principal */
+			function next() {
+				if (document.getElementById("par_zoom").innerHTML == strip_txt) {
+					document.getElementById("par_zoom").innerHTML = sepradar_txt;
+					document.getElementById("titre_zoom").innerHTML = sepradar_ttl;
+				} else if (document.getElementById("par_zoom").innerHTML == sepradar_txt) {
+					document.getElementById("par_zoom").innerHTML = phraseo_txt;
+					document.getElementById("titre_zoom").innerHTML = phraseo_ttl;
+				} else {
+					document.getElementById("par_zoom").innerHTML = strip_txt;
+					document.getElementById("titre_zoom").innerHTML = strip_ttl;
+				}
+			}
+
+			function previous() {
+				if (document.getElementById("par_zoom").innerHTML == strip_txt) {
+					document.getElementById("par_zoom").innerHTML = phraseo_txt;
+					document.getElementById("titre_zoom").innerHTML = phraseo_ttl;
+				} else if (document.getElementById("par_zoom").innerHTML == sepradar_txt) {
+					document.getElementById("par_zoom").innerHTML = strip_txt;
+					document.getElementById("titre_zoom").innerHTML = strip_ttl;
+				} else {
+					document.getElementById("par_zoom").innerHTML = sepradar_txt;
+					document.getElementById("titre_zoom").innerHTML = sepradar_ttl;
+				}
+			}
+		</script>
+
+<!--encart "zoom sur"-->
+		<section class="clearfix zoom">
+			<ul class="pointless">
+				<li class="l inline"><strong>Zoom sur...</strong></li>
+				<li class="inline r"><button type="button" onclick="next()"> &gt;&gt;</button></li>
+				<li id="titre_zoom" class="inline r"><larger> un strip </larger></li>
+				<li class="inline r"><button type="button" onclick="previous()"> &lt;&lt;</button></li>
 			</ul>
-			<p><img class="pastropgrand" src="illustrations/strip.png" alt="La photo d’un strip">Un strip contient un grand nombre d’informations, souvent codifiée. L’espace de gauche donne les éléments généraux du vol. Entre autres, <strong>TVF7217</strong> (à prononcer «&nbsp;france soleil soixante-douze dix-sept&nbsp;») est l’<em>indicatif du vol</em>&nbsp;; <strong>B738</strong> est le <em>type d’avion</em>, un Boeing 737-800&nbsp;; <strong>LFTH</strong> et <strong>LFRS</strong> sont les <em>codes <abbr title="Organisation de l’Aviation Civile Internationale">OACI</abbr></em> des aéroports de départ, Toulon-Hyères, et d’arrivée, Nantes-Atlantique. Un peu plus à droite, <strong>JULEE PADKO FJR</strong> sont les noms des points que le pilote a prévu de survoler, <em>sa route</em>, en dessous desquels on peut également lire leurs heures de survol prévues. Encore à droite, les nombres <strong>2000 ... 170</strong> représentent les <em>altitudes</em> que le contrôleur est susceptible d’autoriser.</p>
+			<p id="par_zoom"></p>
 		</section>
+		<script type="text/javascript">
+				document.getElementById("par_zoom").innerHTML = strip_txt;
+			</script>
 		<hr>
-		<section>
+
+		<section class="basdepage">
 			<p>Ce site a été réalisé dans le cadre d’un TP, pour la première année de licence d’informatique de l’<abbr title="Institut d’Enseignement à Distance">IED</abbr> Paris 8.</p>
 			<p>Vous voulez en savoir plus sur le contrôle aérien&nbsp;? Voici un <a href="https://devenir.controleuraerien.fr/">site</a> pas plus joli que le mien, sponsorisé par un syndicat.</p>
 			<p>Un autre <a href="https://www.enac.fr/fr/mcta-controleur-aerien">lien</a> pour en apprendre plus sur la formation des contrôleurs, vers le site de l’<abbr title="École Nationale de l’Aviation Civile">ENAC</abbr>, seule école en France à former des contrôleurs aériens.</p>

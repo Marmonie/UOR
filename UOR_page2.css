@@ -87,6 +87,7 @@ li a:hover:not(.active) {
 
 .pointless {
 	list-style-type: none;
+  overflow: hidden;
 }
 
 .inline {
