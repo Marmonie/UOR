@@ -54,7 +54,7 @@
 			} else {
 				$nom = nettoyer($_POST['nom']);
 				// vérifie si nom contient seulement lettres, chiffres et espaces
-				if (!preg_match("/^[0-9a-zA-Z-' éèô]*$/",$nom)) {
+				if (!preg_match("/^[0-9a-zA-Z- Ééèô]*$/",$nom)) {
   				$nomErr = "seulement lettres, chiffres et espaces autorisés";
   				}
 			} 
@@ -62,7 +62,7 @@
 			// courriel
 			if (!empty($_POST['courriel'])) {
 				$courriel = nettoyer($_POST['courriel']);
-				if (!filter_var($courriel, FILTER_VALIDATE_EMAIL)) {
+				if ((!filter_var($courriel, FILTER_VALIDATE_EMAIL)) || (preg_match("/'/", $courriel))) {
   				$courrielErr = "adresse non valide";
 				}
 			} 
@@ -123,7 +123,7 @@
 
 				/* test insertion */
 				if (mysqli_query($conn, $sql_insert)) {
-					echo "Vos réponses ont bien été enregistrées.";
+					echo $nom . ", vos réponses ont bien été enregistrées.";
 				} else {
 					echo "Error : " . $sql_insert . "<br>" . mysqli_error($conn);
 				} 
@@ -263,15 +263,6 @@
 							echo "<p>" . round($nb_res5_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p><p><strong>Votre score est de $score_user sur 5.</strong></p>
 								<p>" . $nb_participants . " personnes ont participé jusqu’à présent. Merci à ";
 
-							// affichage nom des participants
-							$sql_noms = "SELECT `nom` FROM id21044620_atcodb.questionnaire";
-							$noms_participants = mysqli_query($conn, $sql_noms);
-							if (mysqli_num_rows($noms_participants) > 0) {
-								while ($row = mysqli_fetch_assoc($noms_participants)) {
-									echo $row['nom'] . ", ";
-								}
-								echo "pour leur participation&nbsp;!</p>";
-							}
 						} else {
 							// Le bouton "Vérifier mes réponses" disparaît après la première tentative
 							echo('<p><input type="submit" value="Vérifier mes réponses"></p>'); 
