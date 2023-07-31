@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-  	<!--Chapitre 3 du cours "Utilisation d’Ordinateurs en Réseau" de P. Kislin-->
   	<head>
     	<title>Contrôleur aérien</title>
     	<meta charset="utf-8">
@@ -261,7 +260,7 @@
 							$sql_nb_res5_correct = "SELECT SUM(`res5`) FROM id21044620_atcodb.questionnaire";
 							$nb_res5_correct = mysqli_fetch_row(mysqli_query($conn, $sql_nb_res5_correct))[0];
 							echo "<p>" . round($nb_res5_correct/$nb_participants*100) . "&#37; des participants ont répondu correctement à cette question.</p><p><strong>Votre score est de $score_user sur 5.</strong></p>
-								<p>" . $nb_participants . " personnes ont participé jusqu’à présent. Merci à ";
+								<p>" . $nb_participants . " personnes ont participé jusqu’à présent.";
 
 						} else {
 							// Le bouton "Vérifier mes réponses" disparaît après la première tentative
