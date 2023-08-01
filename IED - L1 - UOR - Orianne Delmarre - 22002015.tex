@@ -1083,6 +1083,60 @@ Comme à l’habituée, n’oubliez pas de commenter les différentes opération
 Sources (*) : N’oubliez pas d’ajouter à votre archive, les sources du chatbot de l’exercice 7.2.
 
 \textbf{Réponse :}
+ 
+\begin{enumerate}
+
+	\item \textbf{Transfert du dossier {\sffamily public\_html} de mon hébergeur vers un répertoire nommé {\sffamily htdocs} sur mon ordinateur avec FTP}
+	
+	Le nom de l’hébergeur et le nom d’utilisateur nécessaires pour ouvrir une connexion sont donnés dans les paramètres généraux (fig~\ref{c7parametresFTP}). Ci-dessous la liste des commandes utilisées :
+	
+	{\sffamily ftp files.000webhost.com} --> {\em Démarrage de la connexion FTP avec le serveur}
+
+		\includegraphics[width=12cm, center]{CE/c7FTP1.png}
+
+	{\sffamily ls} --> {\em Pour voir où je suis}
+	
+		\includegraphics[width=14cm, center]{CE/c7FTP2.png}
+
+	{\sffamily cd public\_html} --> {\em FTP ne transfère que des fichiers, pas de dossiers. Je me déplace dans le répertoire {\sffamily public\_html} dont je veux copier les fichiers.}
+	
+	{\sffamily ls} --> {\em Pour voir l’ensemble des fichiers. Attention, il y a un répertoire, "illustrations".}
+		
+		\includegraphics[width=9cm, center]{CE/c7FTP3.png}
+
+	{\sffamily mget *.html} {\em (puis validation pour chaque fichier concerné)} --> {\em commande groupée pour gagner du temps}
+			
+		\includegraphics[width=17cm, center]{CE/c7FTP4.png}
+
+	{\sffamily get style.css} {\em (idem pour.htaccess et reception\_quizz.php)}
+				
+		\includegraphics[width=17cm, center]{CE/c7FTP4b.png}
+
+	{\sffamily cd illustrations} --> {\em Maintenant, je veux copier les fichiers du répertoire illustrations.}
+				
+		\includegraphics[width=11cm, center]{CE/c7FTP5.png}
+
+	{\sffamily ls} --> {\em Mais qu’y a-t-il dedans~?}
+					
+		\includegraphics[width=9cm, center]{CE/c7FTP6.png}
+
+	{\sffamily mget *.png} {\em (puis validation pour chaque fichier concerné)} --> {\em Que des images, bam, une seule commande~!}
+						
+		\includegraphics[width=17cm, center]{CE/c7FTP7.png}
+
+	{\sffamily exit} --> {\em fin de la connexion FTP. J’ai changé mon mot de passe après ça, à cause des problèmes de connexion non sécurisée et de mot de passe qui apparaît en clair. Pour finir, je vérifie que les fichiers ont bien été copiés dans le répertoire htdocs en local, et je créé un répertoire illustrations pour retrouver l’organisation du répertoire public\_html.}
+							
+		\includegraphics[width=17cm, center]{CE/c7FTP8.png}
+
+		\begin{figure}[h]
+		\includegraphics[width=18cm, center]{CE/c7parametresFTP.png}
+		\caption{Chapitre 7 - CE des paramètres FTP pour atco.000webhostapp.com}
+		\label{c7parametresFTP}
+		\end{figure}
+		
+
+		
+\end{enumerate}
 
 
 	\subsection*{Exercice 7.2 (Mini-Projet - À Rendre)}
@@ -1878,6 +1932,7 @@ Code complet de la page interactive index.html :
 		\caption{Chap 6 - CE de l’encadré "Zoom sur"dans firefox (3/3)}
 		\label{c6navigateur1}
 		\end{figure}	
+		
 \section{Annexes au chapitre 7}
 
 
